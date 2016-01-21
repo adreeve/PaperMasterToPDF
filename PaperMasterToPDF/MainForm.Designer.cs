@@ -39,6 +39,7 @@
             this.OutputFolderLabel = new System.Windows.Forms.Label();
             this.SelectOutputFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.PreviewCheckBox = new System.Windows.Forms.CheckBox();
+            this.PaperMasterPathsCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // OpenCabinetButton
@@ -47,7 +48,7 @@
             this.OpenCabinetButton.Name = "OpenCabinetButton";
             this.OpenCabinetButton.Size = new System.Drawing.Size(126, 23);
             this.OpenCabinetButton.TabIndex = 0;
-            this.OpenCabinetButton.Text = "&Open Cabinet...";
+            this.OpenCabinetButton.Text = "Open &Cabinet...";
             this.OpenCabinetButton.UseVisualStyleBackColor = true;
             this.OpenCabinetButton.Click += new System.EventHandler(this.OpenCabinetButton_Click);
             // 
@@ -57,6 +58,7 @@
             this.DocumentsListBox.Location = new System.Drawing.Point(12, 99);
             this.DocumentsListBox.Name = "DocumentsListBox";
             this.DocumentsListBox.Size = new System.Drawing.Size(525, 259);
+            this.DocumentsListBox.Sorted = true;
             this.DocumentsListBox.TabIndex = 1;
             // 
             // SelectAllButton
@@ -125,18 +127,29 @@
             // PreviewCheckBox
             // 
             this.PreviewCheckBox.AutoSize = true;
-            this.PreviewCheckBox.Location = new System.Drawing.Point(171, 76);
+            this.PreviewCheckBox.Location = new System.Drawing.Point(12, 76);
             this.PreviewCheckBox.Name = "PreviewCheckBox";
             this.PreviewCheckBox.Size = new System.Drawing.Size(210, 17);
             this.PreviewCheckBox.TabIndex = 8;
-            this.PreviewCheckBox.Text = "Show Converted Files After Conversion";
+            this.PreviewCheckBox.Text = "&Show Converted Files After Conversion";
             this.PreviewCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // PaperMasterPathsCheckBox
+            // 
+            this.PaperMasterPathsCheckBox.AutoSize = true;
+            this.PaperMasterPathsCheckBox.Location = new System.Drawing.Point(229, 76);
+            this.PaperMasterPathsCheckBox.Name = "PaperMasterPathsCheckBox";
+            this.PaperMasterPathsCheckBox.Size = new System.Drawing.Size(138, 17);
+            this.PaperMasterPathsCheckBox.TabIndex = 9;
+            this.PaperMasterPathsCheckBox.Text = "&Use PaperMaster Paths";
+            this.PaperMasterPathsCheckBox.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(549, 400);
+            this.Controls.Add(this.PaperMasterPathsCheckBox);
             this.Controls.Add(this.PreviewCheckBox);
             this.Controls.Add(this.OutputFolderLabel);
             this.Controls.Add(this.CabinetFolderLabel);
@@ -167,6 +180,7 @@
         private System.Windows.Forms.Label OutputFolderLabel;
         private System.Windows.Forms.FolderBrowserDialog SelectOutputFolderDialog;
         private System.Windows.Forms.CheckBox PreviewCheckBox;
+        private System.Windows.Forms.CheckBox PaperMasterPathsCheckBox;
     }
 }
 

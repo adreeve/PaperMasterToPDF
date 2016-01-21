@@ -32,24 +32,27 @@ namespace PaperMasterToPDF
         {
             private UInt32 m_docID; // The unique ID for this document
             private UInt32 m_conID; // The unique ID for the folder that contains this document
+            private string m_path; // The PaperMaster path for this file
             private string m_name; // The document's name
 
-            public PMDocument(UInt32 docID, UInt32 conID, string name)
+            public PMDocument(UInt32 docID, UInt32 conID, string path, string name)
             {
                 m_docID = docID;
                 m_conID = conID;
+                m_path = path;
                 m_name = name;
             }
 
             public UInt32 ConID { get { return m_conID; } }
 
             public UInt32 DocID { get { return m_docID; } }
+            public string Path { get { return m_path; } }
 
             public string Name {  get { return m_name; } }
 
             public override string ToString()
             {
-                return m_name;
+                return String.Format("{0} ({1})", m_name, m_path);
             }
         }
 
@@ -79,8 +82,8 @@ namespace PaperMasterToPDF
             public string name; // Page #
         }
 
-        private string CabinetFolder = "R:\\PMLive_Cabinets\\ATARI8DO";
-        private string OutputFolder = "R:\\Junk";
+        private string CabinetFolder = ""; //"R:\\PMLive_Cabinets\\ATARI8DO";
+        private string OutputFolder = ""; //"R:\\Junk";
         private List<PMDocument> lstDocuments;
         private SortedList<UInt32, PMFolder> lstFolders;
         private SortedList<string, SortedList<string, PMFile>> filesCache;
@@ -107,11 +110,11 @@ namespace PaperMasterToPDF
             {
                 string PMCabinetRoot = SelectPaperMasterCabinetDialog.SelectedPath;
 
-                string docIDFilename = PMCabinetRoot + "\\_DOCID._PS";
-                lstDocuments = ReadDocuments(docIDFilename);
-
                 string folderIDFilename = PMCabinetRoot + "\\_foldid._ps";
                 lstFolders = ReadFolders(folderIDFilename);
+
+                string docIDFilename = PMCabinetRoot + "\\_DOCID._PS";
+                lstDocuments = ReadDocuments(lstFolders, docIDFilename);
 
                 DocumentsListBox.Items.Clear();
                 foreach (PMDocument document in lstDocuments)
@@ -166,7 +169,7 @@ namespace PaperMasterToPDF
             return field;
         }
 
-        List<PMDocument> ReadDocuments(string docFilename)
+        List<PMDocument> ReadDocuments(SortedList<UInt32, PMFolder> lstFolders, string docFilename)
         {
             List<PMDocument> lstDocuments = null;
 
@@ -221,7 +224,8 @@ namespace PaperMasterToPDF
                         }
                     }
 
-                    lstDocuments.Add(new PMDocument(docID, conID, name));
+                    PMFolder folder = lstFolders[conID];
+                    lstDocuments.Add(new PMDocument(docID, conID, folder.pfcPath, name));
                 }
 
                 fs.Close();
@@ -552,7 +556,21 @@ namespace PaperMasterToPDF
 
                     // Generate output filename
                     string documentName = document.Name.Replace(':', '-').Replace('\\', '_').Replace('/', '_');
-                    string pdfFilename = String.Format("{0}\\{1}.PDF", OutputFolder, documentName);
+                    string subDirName = document.Path.Replace(':', '-');
+                    string pdfFilename = OutputFolder; //String.Format("{0}\\{1}.PDF", OutputFolder, documentName);
+                    if (PaperMasterPathsCheckBox.Checked)
+                    {
+                        string[] subDirs = subDirName.Split('\\');
+                        foreach (string subDir in subDirs)
+                        {
+                            pdfFilename = String.Format("{0}\\{1}", pdfFilename, subDir);
+                            if (!System.IO.Directory.Exists(pdfFilename))
+                            {
+                                System.IO.Directory.CreateDirectory(pdfFilename);
+                            }
+                        }
+                    }
+                    pdfFilename = String.Format("{0}\\{1}.PDF", pdfFilename, documentName);
                     pdfDocument.Save(pdfFilename);
 
                     // If Preview is checked then immediately display the converted file
